@@ -32,6 +32,15 @@ Route::post('/login/jobseeker', [JobSeekerController::class, 'login']);
 Route::get('/login/admin', [AdminController::class, 'showLoginForm']);
 Route::post('/login/admin', [AdminController::class, 'login']);
 
+Route::middleware(['auth:admin'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/photo/{filename}', [AdminController::class, 'getPhoto'])->name('admin.photo');
+    Route::get('/resume/{filename}', [AdminController::class, 'downloadResume'])->name('admin.resume.download');
+
+    Route::get('/jobseeker/{id}', [AdminController::class, 'showJobSeeker'])->name('admin.jobseeker.view');
+    Route::delete('/jobseeker/{id}', [AdminController::class, 'deleteJobSeeker'])->name('admin.jobseeker.delete');
+});
+
 Route::middleware(['auth:jobseeker'])->prefix('jobseeker')->name('jobseeker.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -44,4 +53,4 @@ Route::middleware(['auth:jobseeker'])->prefix('jobseeker')->name('jobseeker.')->
     Route::post('/password/update', [PasswordController::class, 'update'])->name('password.update');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

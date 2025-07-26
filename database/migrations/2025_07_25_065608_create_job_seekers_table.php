@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('resume')->nullable();
             $table->string('photo')->nullable();
             $table->string('password');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
