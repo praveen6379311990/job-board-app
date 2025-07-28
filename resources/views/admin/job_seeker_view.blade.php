@@ -31,6 +31,11 @@
                         <span class="ms-2">No resume</span>
                     @endif
                 </li>
+                <li class="list-group-item">
+                        <a href="{{ url()->previous() }}" class="inline-block mb-4 text-blue-600 hover:underline">
+                    ← Back
+                </a>
+                </li>
             </ul>
         </div>
     </div>

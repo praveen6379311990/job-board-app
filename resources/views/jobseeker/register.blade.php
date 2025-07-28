@@ -21,7 +21,10 @@
                     <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
                         Register
                     </button>
-                    <a href="{{ url()->previous() }}" class="inline-block mb-4 text-blue-600 hover:underline">
+                    {{-- <a href="{{ url()->previous() }}" class="inline-block mb-4 text-blue-600 hover:underline">
+                        ← Back
+                    </a> --}}
+                    <a href="{{ route('home') }}" class="inline-block mb-4 text-blue-600 hover:underline">
                         ← Back
                     </a>
                 </div>

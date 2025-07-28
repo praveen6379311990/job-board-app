@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
+    if (Auth::guard('jobseeker')->check()) {
+        return redirect()->route('jobseeker.dashboard');
+    } elseif (Auth::guard('admin')->check()) {
+        return redirect()->route('admin.dashboard');
+    }
     return view('home');
 })->name('home');
 
@@ -27,10 +32,12 @@ Route::middleware('auth')->group(function () {
 Route::get('/register/jobseeker', [JobSeekerController::class, 'showRegisterForm']);
 Route::post('/register/jobseeker', [JobSeekerController::class, 'register']);
 
-Route::get('/login/jobseeker', [JobSeekerController::class, 'showLoginForm']);
+Route::get('/login/jobseeker', [JobSeekerController::class, 'showLoginForm'])
+    ->middleware('redirect.authenticated:jobseeker');
 Route::post('/login/jobseeker', [JobSeekerController::class, 'login']);
 
-Route::get('/login/admin', [AdminController::class, 'showLoginForm']);
+Route::get('/login/admin', [AdminController::class, 'showLoginForm'])
+    ->middleware('redirect.authenticated:admin');
 Route::post('/login/admin', [AdminController::class, 'login']);
 
 Route::middleware(['auth:admin'])->prefix('admin')->group(function () {
@@ -53,12 +60,11 @@ Route::middleware(['auth:jobseeker'])->prefix('jobseeker')->name('jobseeker.')->
     Route::get('/password/change', [PasswordController::class, 'edit'])->name('password.edit');
     Route::post('/password/update', [PasswordController::class, 'update'])->name('password.update');
 });
+Route::post('/logout/jobseeker', [JobSeekerController::class, 'logoutJobseeker'])
+    ->name('jobseeker.logout');
 
-Route::post('/logout', function () {
-    Auth::logout();
-    request()->session()->invalidate();
-    request()->session()->regenerateToken();
-    return redirect('/');
-})->name('logout');
+    Route::post('/logout/admin', [AdminController::class, 'logoutAdmin'])
+    ->name('admin.logout');
+
 
 require __DIR__ . '/auth.php';

@@ -94,7 +94,7 @@ class AdminController extends Controller
         $customName = 'Resume.' . $extension;
 
 
-        return Storage::download($path,$customName);
+        return Storage::download($path, $customName);
     }
 
 
@@ -117,10 +117,13 @@ class AdminController extends Controller
     }
 
 
+    public function logoutAdmin(Request $request)
+{
+    Auth::guard('admin')->logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
 
-    public function logout()
-    {
-        Auth::guard('admin')->logout();
-        return redirect('/login/admin');
-    }
+    // return redirect('/login/admin')->with('status', 'Admin successfully logged out!');
+    return redirect()->route('home');
+}
 }

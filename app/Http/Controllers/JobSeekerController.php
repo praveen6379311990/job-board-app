@@ -78,4 +78,15 @@ class JobSeekerController extends Controller
 
         return back()->withErrors(['email' => 'Invalid credentials']);
     }
+
+    public function logoutJobseeker(Request $request)
+    {
+        Auth::guard('jobseeker')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        // return redirect('/login/jobseeker');
+        return redirect()->route('home');
+
+    }
 }

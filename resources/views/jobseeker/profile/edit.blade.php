@@ -32,7 +32,7 @@
                 <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
                     Update
                 </button>
-                <a href="{{ url()->previous() }}" class="inline-block mb-4 text-blue-600 hover:underline">
+                <a href="{{ url('/jobseeker/dashboard') }}" class="inline-block mb-4 text-blue-600 hover:underline">
                     ← Back
                 </a>
             </div>

@@ -148,54 +148,28 @@
 </head>
 
 <body class="font-sans antialiased">
-    {{-- Header --}}
-    <!-- <nav class="navbar navbar-expand-lg navbar-custom">
-        <div class="container">
-            <a class="navbar-brand" href="{{ url('/') }}">JobPortal</a>
-            @auth
-            <p>Welcome, {{ auth()->user()->name }}</p>
-            @endauth
-            <div class="collapse navbar-collapse justify-content-between">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/') }}">Home</a>
-                    </li>
-                </ul>
 
-                <ul class="navbar-nav">
-                     @auth
-                <li class="nav-item">
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" class="btn btn-sm btn-outline-light">Logout</button>
-                    </form>
-                </li>
-                @endauth
-                </ul>
-            </div>
-        </div>
-    </nav> -->
     <nav class="navbar navbar-expand-lg navbar-custom">
         <div class="container">
             <a class="navbar-brand" href="{{ url('/') }}">JobPortal</a>
-
-            <!-- Toggler for collapsed navbar -->
-            <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
-                aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span> -->
             </button>
 
-            <!-- Collapsible Content -->
-            @auth
-            <div class="navbar-links">
-                <a href="/">Home</a>
-                <span> Welcome, {{ auth()->user()->name }}</span>
-                <form method="POST" action="/logout">
-                    <!-- <input type="hidden" name="_token" value="YOUR_CSRF_TOKEN_HERE"> -->
-                     @csrf
-                    <button type="submit" class="logout-btn">Logout</button>
-                </form>
-            </div>
+            @auth('jobseeker')
+                <div class="navbar-links">
+                    <span>Welcome, {{ auth('jobseeker')->user()->name }}</span>
+                    <form method="POST" action="{{ route('jobseeker.logout') }}">
+                        @csrf
+                        <button type="submit" class="logout-btn">Logout</button>
+                    </form>
+                </div>
+            @elseif(auth('admin')->check())
+                <div class="navbar-links">
+                    <span>Welcome, {{ auth('admin')->user()->name }}</span>
+                    <form method="POST" action="{{ route('admin.logout') }}">
+                        @csrf
+                        <button type="submit" class="logout-btn">Logout</button>
+                    </form>
+                </div>
             @endauth
         </div>
     </nav>

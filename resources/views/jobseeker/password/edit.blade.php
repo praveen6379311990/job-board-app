@@ -115,7 +115,7 @@
         </div>
 
         <div class="form-actions">
-            <a href="{{ url()->previous() }}" class="btn-back">← Back</a>
+            <a href="{{ url('/jobseeker/dashboard') }}" class="btn-back">← Back</a>
             <button type="submit" class="btn-submit">Change Password</button>
         </div>
     </form>
