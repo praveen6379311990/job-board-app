@@ -6,6 +6,7 @@ use App\Http\Controllers\JobSeeker\PasswordController;
 use App\Http\Controllers\JobSeeker\ProfileController as JobSeekerProfileController;
 use App\Http\Controllers\JobSeekerController;
 use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -52,5 +53,12 @@ Route::middleware(['auth:jobseeker'])->prefix('jobseeker')->name('jobseeker.')->
     Route::get('/password/change', [PasswordController::class, 'edit'])->name('password.edit');
     Route::post('/password/update', [PasswordController::class, 'update'])->name('password.update');
 });
+
+Route::post('/logout', function () {
+    Auth::logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect('/');
+})->name('logout');
 
 require __DIR__ . '/auth.php';

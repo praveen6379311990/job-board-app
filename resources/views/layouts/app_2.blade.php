@@ -4,16 +4,12 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <script src="https://cdn.tailwindcss.com"></script>
-
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
     <style>
         /* Registration Page Styles */
 
@@ -142,19 +138,16 @@
             }
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="font-sans antialiased">
-    {{-- Header --}}
+<body>
+    {{-- Navbar --}}
     <!-- <nav class="navbar navbar-expand-lg navbar-custom">
         <div class="container">
             <a class="navbar-brand" href="{{ url('/') }}">JobPortal</a>
-            @auth
-            <p>Welcome, {{ auth()->user()->name }}</p>
-            @endauth
+
             <div class="collapse navbar-collapse justify-content-between">
                 <ul class="navbar-nav">
                     <li class="nav-item">
@@ -163,42 +156,38 @@
                 </ul>
 
                 <ul class="navbar-nav">
-                     @auth
-                <li class="nav-item">
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" class="btn btn-sm btn-outline-light">Logout</button>
-                    </form>
-                </li>
-                @endauth
+                    @auth
+                        <li class="nav-item me-3 text-white">
+                            Welcome, {{ auth()->user()->name }}
+                        </li>
+                        <li class="nav-item">
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="logout-btn">Logout</button>
+                            </form>
+                        </li>
+                    @endauth
                 </ul>
             </div>
         </div>
     </nav> -->
-    <nav class="navbar navbar-expand-lg navbar-custom">
-        <div class="container">
-            <a class="navbar-brand" href="{{ url('/') }}">JobPortal</a>
 
-            <!-- Toggler for collapsed navbar -->
-            <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
-                aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span> -->
-            </button>
 
-            <!-- Collapsible Content -->
-            @auth
-            <div class="navbar-links">
-                <a href="/">Home</a>
-                <span> Welcome, {{ auth()->user()->name }}</span>
-                <form method="POST" action="/logout">
-                    <!-- <input type="hidden" name="_token" value="YOUR_CSRF_TOKEN_HERE"> -->
-                     @csrf
-                    <button type="submit" class="logout-btn">Logout</button>
-                </form>
-            </div>
-            @endauth
+    <nav class="navbar">
+        <a class="navbar-brand" href="/">JobPortal</a>
+        @auth
+        <div class="navbar-links">
+            <a href="/">Home</a>
+            <span> Welcome, {{ auth()->user()->name }}</span>
+            <form method="POST" action="/logout">
+                <input type="hidden" name="_token" value="YOUR_CSRF_TOKEN_HERE">
+                <button type="submit" class="logout-btn">Logout</button>
+            </form>
         </div>
+        @endauth
     </nav>
+
+
     {{-- Main Content --}}
     <div class="container mt-4">
         @yield('content')

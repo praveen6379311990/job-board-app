@@ -1,25 +1,38 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <h2>Job Seeker Detail</h2>
-    <ul>
-        <li><strong>Name:</strong> {{ $jobSeeker->name }}</li>
-        <li><strong>Email:</strong> {{ $jobSeeker->email }}</li>
-        <li><strong>Phone:</strong> {{ $jobSeeker->phone }}</li>
-        <li><strong>Experience:</strong> {{ $jobSeeker->experience }}</li>
-        <li><strong>Skills:</strong> {{ $jobSeeker->skills }}</li>
-        <li><strong>Job Location:</strong> {{ $jobSeeker->job_location }}</li>
-        <li><strong>Photo:</strong>
-            @if($jobSeeker->photo)
-                <img src="{{ asset('uploads/photos/'.$jobSeeker->photo) }}" width="100">
-            @endif
-        </li>
-        <li><strong>Resume:</strong>
-            @if($jobSeeker->resume)
-                <a href="{{ asset('uploads/resumes/'.$jobSeeker->resume) }}" download>Download Resume</a>
-            @endif
-        </li>
-    </ul>
+<div class="container mt-5">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Job Seeker Details</h4>
+        </div>
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong>Name:</strong> {{ $jobSeeker->name }}</li>
+                <li class="list-group-item"><strong>Email:</strong> {{ $jobSeeker->email }}</li>
+                <li class="list-group-item"><strong>Phone:</strong> {{ $jobSeeker->phone }}</li>
+                <li class="list-group-item"><strong>Experience:</strong> {{ $jobSeeker->experience }} years</li>
+                <li class="list-group-item"><strong>Skills:</strong> {{ $jobSeeker->skills }}</li>
+                <!-- <li class="list-group-item"><strong>Job Location:</strong> {{ $jobSeeker->location_id }}</li> -->
+                <li class="list-group-item"><strong>Job Location:</strong> {{ $jobSeeker->location->city ?? 'Unknown' }}</li>
+                <li class="list-group-item d-flex align-items-center">
+                    <strong class="me-2">Photo:</strong>
+                    @if ($jobSeeker->photo)
+                        <img src="{{ asset('storage/' . $jobSeeker->photo) }}" width="100" class="img-thumbnail">
+                    @else
+                        <span>No photo</span>
+                    @endif
+                </li>
+                <li class="list-group-item">
+                    <strong>Resume:</strong>
+                    @if ($jobSeeker->resume)
+                        <a href="{{ route('admin.resume.download', basename($jobSeeker->resume)) }}" class="btn btn-sm btn-outline-primary ms-2" target="_blank">Download Resume</a>
+                    @else
+                        <span class="ms-2">No resume</span>
+                    @endif
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>
 @endsection

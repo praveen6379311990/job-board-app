@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\JobSeeker;
+use App\Models\Location;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -33,7 +34,9 @@ class AdminController extends Controller
     }
     public function dashboard(Request $request)
     {
-        $query = JobSeeker::query();
+        $locations = Location::all();
+
+        $query = JobSeeker::query()->with('location');
 
         if ($request->filled('name')) {
             $query->where('name', 'like', "%{$request->name}%");
@@ -50,30 +53,34 @@ class AdminController extends Controller
         if ($request->filled('skills')) {
             $query->where('skills', 'like', "%{$request->skills}%");
         }
-        if ($request->filled('job_location')) {
-            $query->where('job_location', 'like', "%{$request->job_location}%");
+        if ($request->filled('location_id')) {
+            $query->where('location_id', $request->location_id); // direct comparison
         }
+
 
         $jobSeekers = $query->get();
 
-        return view('admin.dashboard', compact('jobSeekers'));
+        return view('admin.dashboard', compact('jobSeekers', 'locations'));
     }
 
     public function showJobSeeker($id)
     {
-        $jobSeeker = JobSeeker::findOrFail($id);
-        return view('admin.job_seeker_view', compact('jobSeeker'));
+        $jobSeeker = JobSeeker::with('location')->findOrFail($id);
+        return view('admin.job_seeker_view', compact('jobSeeker',));
     }
 
     public function getPhoto($filename)
     {
-        $path = 'private/photos/' . $filename;
+        $path = 'public/photos/' . $filename;
 
         if (!Storage::exists($path)) {
-            abort(404);
+            abort(404, 'Photo not found');
         }
 
-        return response()->file(storage_path('app/' . $path));
+        $fileContent = Storage::get($path);
+        $mime = Storage::mimeType($path);
+
+        return response($fileContent)->header('Content-Type', $mime);
     }
 
     public function downloadResume($filename)
@@ -81,11 +88,15 @@ class AdminController extends Controller
         $path = 'private/resumes/' . $filename;
 
         if (!Storage::exists($path)) {
-            abort(404);
+            abort(404, 'Resume not found');
         }
+        $extension = pathinfo($filename, PATHINFO_EXTENSION);
+        $customName = 'Resume.' . $extension;
 
-        return Storage::download($path);
+
+        return Storage::download($path,$customName);
     }
+
 
 
     public function deleteJobSeeker($id)

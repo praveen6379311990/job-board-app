@@ -37,16 +37,20 @@ class ProfileController extends Controller
 
         // Handle Profile Image
         if ($request->hasFile('photo')) {
-            $imageName = time() . '_profile.' . $request->photo->extension();
-            $request->photo->move(public_path('photo'), $imageName);
-            $validatedData['photo'] = 'photo/' . $imageName;
+            // $imageName = time() . '_profile.' . $request->photo->extension();
+            // $request->photo->move(public_path('photo'), $imageName);
+            // $validatedData['photo'] = 'photo/' . $imageName;
+            $photoPath = $request->file('photo')->store('photos', 'public');
+            $validatedData['photo'] = $photoPath;
         }
 
         // Handle Resume
         if ($request->hasFile('resume')) {
-            $resumeName = time() . '_resume.' . $request->resume->extension();
-            $request->resume->move(public_path('resume'), $resumeName);
-            $validatedData['resume'] = 'resume/' . $resumeName;
+            // $resumeName = time() . '_resume.' . $request->resume->extension();
+            // $request->resume->move(public_path('resume'), $resumeName);
+            // $validatedData['resume'] = 'resume/' . $resumeName;
+            $resumePath = $request->file('resume')->store('private/resumes');
+            $validatedData['resume'] = $resumePath;
         }
 
         // Update the jobseeker

@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendRegistrationEmailJob;
+use App\Mail\WelcomeJobSeekerMail;
 use App\Models\JobSeeker;
 use App\Models\Location;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class JobSeekerController extends Controller
 {
@@ -31,10 +34,16 @@ class JobSeekerController extends Controller
             'password' => 'required|confirmed|min:6',
         ]);
 
-        $resumePath = $request->file('resume')?->store('resumes');
-        $photoPath = $request->file('photo')?->store('photos');
+        // $resumePath = $request->file('resume')?->store('resumes');
+        // $photoPath = $request->file('photo')?->store('photos');
+        // Store photo in public disk
+        $photoPath = $request->file('photo')?->store('photos', 'public');
 
-        JobSeeker::create([
+        // Store resume in local disk (private)
+        $resumePath = $request->file('resume')?->store('private/resumes');
+
+
+        $jobSeeker = JobSeeker::create([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
@@ -46,6 +55,10 @@ class JobSeekerController extends Controller
             'photo' => $photoPath,
             'password' => bcrypt($request->password),
         ]);
+
+        // Dispatch job to send welcome email
+        // SendRegistrationEmailJob::dispatch($jobSeeker);
+        dispatch(new SendRegistrationEmailJob($jobSeeker));
 
         return redirect('/login/jobseeker')->with('success', 'Registered successfully');
     }
